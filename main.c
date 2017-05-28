@@ -1,12 +1,10 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
 #include <mm_malloc.h>
 #include <math.h>
-#include <time.h>
-
+#include <locale.h>
 
 unsigned long int comp = 0, moves = 0;
 double T;
@@ -86,13 +84,16 @@ void insert(node ** tree, int val) {
 
 }
 
-void print_inorder(node * tree) {
+void treeIntoArray(node * tree, p *pack) {
+    static int i=0;
     if (tree)
     {
-        print_inorder(tree->left);
-        printf("[%d]",tree->data);
-        print_inorder(tree->right);
+        treeIntoArray(tree->left,pack);
+        pack[i].c=tree->data;
+        i++;
+        treeIntoArray(tree->right,pack);
     }
+
 }
 
 void deltree(node * tree) {
@@ -128,7 +129,7 @@ node* search(node ** tree, int val) {
         comp++;
         return *tree;
     }
-    return *tree;
+
 }
 
 
@@ -242,18 +243,18 @@ int main(int argc,char *argv[])
     long int k,i;
     double Tstart,Tend;
     int inputinput,inputsortway,inputsearchway, value,see;
-    printf("Input size: ");
+    printf("Enter size: ");
     scanf("%i", &s);
     p *pack;
     pack=(struct package*)malloc(s*sizeof(struct package));
 
-    printf("Choose a way of inputting:\n 1 By myself \n 2 From file\n 3 By random\n");
+    printf("Choose input way:\n 1 By myself \n 2 From file \n 3 By random\n");
     scanf("%d",&inputinput);
     switch (inputinput){
         case 1:{
-            printf(" Inputting by myself was chosen\n");
+            printf("Input by  yourself was chosen \n");
             massive = (unsigned long int *)malloc(s * sizeof(unsigned long int));
-            printf("Input the array elements:\n");
+            printf("Enter elements:\n");
             for ( i = 0; i < s; i++) {
                 scanf("%lu", &massive[i]);
                 pack[i].c = massive[i];
@@ -261,211 +262,211 @@ int main(int argc,char *argv[])
             }
             break;
         }
-        case 2:{
-            printf("Inputting from file was chosen\n ");
+
+case 2:{
+            printf("Input from file was chosen\n ");
             FILE *otcr;
-            char rz [255];
-            int b=0;
-            if(!(otcr=fopen(argv[1],"rb")) || (argc==1)) {
-                printf("Enter the file name\n");
-                scanf("%s",rz);
-                if (!(otcr=fopen(rz,"rb"))) {
-                    printf("Cant use this file");
-                    return 0;
-                }
-                else
-                    printf ("Using file %s\n", rz);
-            }
-            else printf("Using file %s\n", argv[1]);
+        char rz [255];
+int b=0;
+if(!(otcr=fopen(argv[1],"rb")) || (argc==1)) {
+printf("Enter the file name\n");
+scanf("%s",rz);
+if (!(otcr=fopen(rz,"rb"))) {
+printf("Cant use this file");
+return 0;
+}
+else
+printf ("Using file %s\n", rz);
+}
+else printf("Using file %s\n", argv[1]);
 
-            fseek(otcr,0,SEEK_SET);
+fseek(otcr,0,SEEK_SET);
 
-            for (i=0; i<s; i++) {
-                fscanf(otcr,"%lf,%lu\n",&pack[i].a,&pack[i].c);
-            }
+for (i=0; i<s; i++) {
+fscanf(otcr,"%lf,%lu\n",&pack[i].a,&pack[i].c);
+}
 
-            fclose (otcr);
-            break;
-        }
-        case 3:{
-            printf(" Inputting by random was chosen\n");
-            massive = (unsigned long int *)malloc(s * sizeof(unsigned long int));
-            printf("Input the array elements:\n");
-            for ( i = 0; i < s; i++) {
-                massive[i]=rand()%10000;
-                pack[i].c = massive[i];
-                pack[i].a = 1.1;
-            }
-            break;
-        }
+fclose (otcr);
+break;
+}
+case 3:{
+printf(" Inputting by random was chosen\n");
+massive = (unsigned long int *)malloc(s * sizeof(unsigned long int));
+printf("Input the array elements:\n");
+for ( i = 0; i < s; i++) {
+massive[i]=rand()%10000;
+pack[i].c = massive[i];
+pack[i].a = 1.1;
+}
+break;
+}
 
-        default:{
-            printf ("Wrong input\n");
-            return (0);
-            break;
-        }
-    }
+default:{
+printf ("Wrong input\n");
+return (0);
+break;
+}
+}
 
-    printf("Choose a way of sort:\n 1 For insertion\n 2 For quick\n 3 For tree and tree search\n 4 For bubble\n ");
-    scanf("%d",&inputsortway);
+printf("Choose a way of sort:\n 1 For insertion\n 2 For quick\n 3 For tree and tree search\n 4 For bubble\n ");
+scanf("%d",&inputsortway);
 
-    switch (inputsortway){
+switch (inputsortway){
 
-        case 1:{
-            Tstart = clock();
-            sort_insertion (s, pack);
-            Tend=clock();
-            T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-            printf("\nEstimated time to sort:  %lf sec\n",T);
-            printf("\nMoves through array: [%lu]", moves);
-            printf("\nNumber of comparsions [%lu]", comp);
-            moves=0;
-            comp=0;
-            T = 0;
-            break;
-        }
-        case 2:{
-            Tstart = clock();
-            sort_quick(pack, 0, s-1);
-            Tend=clock();
-            T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-            printf("\nEstimated time to sort:  %lf sec\n",T);
-            printf("\nMoves through array: [%lu]", moves);
-            printf("\nNumber of comparsions [%lu]", comp);
-            moves=0;
-            comp=0;
-            T = 0;
-            break;
-        }
-        case 3:{
+case 1:{
+Tstart = clock();
+sort_insertion (s, pack);
+Tend=clock();
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
+break;
+}
+case 2:{
+Tstart = clock();
+sort_quick(pack, 0, s-1);
+Tend=clock();
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
+break;
+}
+case 3:{
 
-            Tstart = clock();
-            for(k=0; k<s-1; k++) {
-                value = pack[k].c;
-                insert(&root, value);
-            }
-            Tend=clock();
-         //   print_inorder(root);   вывод
-            T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-            printf("\nEstimated time to sort:  %lf sec\n",T);
-            printf("\nMoves through array: [%lu]", moves);
-            printf("\nNumber of comparsions [%lu]", comp);
-            moves=0;
-            comp=0;
-            T = 0;
-            printf("Input element to search in array: ");
-            scanf("%d", &key);
-            Tstart = clock();
-            min = search(&root, key);
-            Tend=clock();
-            T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-            if (min) {
-                printf("Searched node=%d\n", min->data);printf("\nEstimated time to sort:  %lf sec\n",T);
-                printf("\nMoves through array: [%lu]", moves);
-                printf("\nNumber of comparsions [%lu]", comp);
-                moves=0;
-                comp=0;
-                T = 0;
-            } else {
-                printf("Data Not found in tree.\n");
-                moves=0;
-                comp=0;
-                T = 0;
-            }
+Tstart = clock();
+for(k=0; k<s-1; k++) {
+value = pack[k].c;
+insert(&root, value);
+}
+Tend=clock();
+//print_inorder(root);
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
+printf("Input element to search in array: ");
+scanf("%d", &key);
+Tstart = clock();
+min = search(&root, key);
+Tend=clock();
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+if (min) {
+printf("Searched node=%d\n", min->data);printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
+} else {
+printf("Data Not found in tree.\n");
+moves=0;
+comp=0;
+T = 0;
+}
 
-            break;
-  // return 0 ******Эта строчка должна была заканчивать программу при выборе дерева, но мой компилятор работал некорректно и я не стал рисковать
+break;
+// return 0 ******Эта строчка должна была заканчивать программу при выборе дерева, но мой компилятор работал некорректно и я не стал рисковать
 
-        }
-        case 4:{
-            Tstart = clock();
-            sort_bubble(s, pack);
-            Tend=clock();
-            T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-            printf("\nEstimated time to sort:  %lf sec\n",T);
-            printf("\nMoves through array: [%lu]", moves);
-            printf("\nNumber of comparsions [%lu]", comp);
-            moves=0;
-            comp=0;
-            T = 0;
-            break;
-        }
-        default:{
-            printf("Wrong input\n");
+}
+case 4:{
+Tstart = clock();
+sort_bubble(s, pack);
+Tend=clock();
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
+break;
+}
+default:{
+printf("Wrong input\n");
 
-            break;
+break;
 
-        }
+}
 
-    }
-    printf ( "Do you want to see soorted massive?:\n 1 Yes\n 2 No\n");
-    scanf("%d",&see);
-   switch (see){
+}
+printf ( "Do you want to see soorted massive?:\n 1 Yes\n 2 No\n");
+scanf("%d",&see);
+switch (see){
 
-    case 1: {printf("Sorted array:\n");
-    for ( i = 0; i < s; i++){
-        printf("%lu ", pack[i].c);
-        printf("\n");}
-      break; }
+case 1: {printf("Sorted array:\n");
+for ( i = 0; i < s; i++){
+printf("%lu ", pack[i].c);
+printf("\n");}
+break; }
 
 case 2: break;
 }
 
-       printf("Enter a key:\n");
-        scanf("%d",&key);
-        printf("Choose a way of search:\n 1 For line \n 2 For interpol\n ");
-        scanf("%d",&inputsearchway);
-        switch(inputsearchway){
+printf("Enter a key:\n");
+scanf("%d",&key);
+printf("Choose a way of search:\n 1 For line \n 2 For interpol\n ");
+scanf("%d",&inputsearchway);
+switch(inputsearchway){
 
 
-            case 1:{
-                Tstart = clock();
-                k = linearSearch(key, s, pack);
-                Tend=clock();
-                T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-                if (k != -1) {
-                    printf("The index of the element is %ld\n", k);
-                    printf("\nEstimated time to sort:  %lf sec\n",T);
-                    printf("\nMoves through array: [%lu]", moves);
-                    printf("\nNumber of comparsions [%lu]", comp);
-                    moves=0;
-                    comp=0;
-                    T = 0;
-                }
-                else
-                {
-                    printf("The element isn't found!\n");
-                    moves=0;
-                    comp=0;
-                    T = 0;
-                }
-                break;
-            }
-            case 2:{
-                Tstart = clock();
-                value = interpolationSearch(key,s,pack);
-                Tend=clock();
-                T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
-                if (value != -1) {
-                    printf("The index of the element is %d\n", value);
-                printf("\nEstimated time to sort:  %lf sec\n",T);
-                printf("\nMoves through array: [%lu]", moves);
-                printf("\nNumber of comparsions [%lu]", comp);
-                moves=0;
-                comp=0;
-                T = 0;
-                }
-                else
-                    printf("Element not found.");
-break;
-            }
-            default:{
-                printf("Wrong input\n");
-                return 0;
-                break;
-            }
-        }
-    return 0;
+case 1:{
+Tstart = clock();
+k = linearSearch(key, s, pack);
+Tend=clock();
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+if (k != -1) {
+printf("The index of the element is %ld\n", k);
+printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
 }
+else
+{
+printf("The element isn't found!\n");
+moves=0;
+comp=0;
+T = 0;
+}
+break;
+}
+case 2:{
+Tstart = clock();
+value = interpolationSearch(key,s,pack);
+Tend=clock();
+T=(Tend-Tstart)/(double)CLOCKS_PER_SEC;
+if (value != -1) {
+printf("The index of the element is %d\n", value);
+printf("\nEstimated time to sort: %lf sec\n",T);
+printf("\nMoves through array: [%lu]", moves);
+printf("\nNumber of comparsions [%lu]", comp);
+moves=0;
+comp=0;
+T = 0;
+}
+else
+printf("Element not found.");
 
+}
+default:{
+printf("Wrong input\n");
+return 0;
+break;
+}
+}
+return 0;
+}
 
